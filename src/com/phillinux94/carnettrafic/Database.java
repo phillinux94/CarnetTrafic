@@ -25,7 +25,8 @@ public class Database {
             properties.setProperty("encoding", "\"UTF-8\"");
 
             File fileDatabase = new File("Database/CarnetTrafic.bd");
-            String pathDatabase = fileDatabase.getAbsolutePath();
+            String pathDatabase = fileDatabase.getPath();
+
 
             this.conn = DriverManager.getConnection("jdbc:sqlite:" + pathDatabase, properties);
 

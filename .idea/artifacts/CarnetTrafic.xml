@@ -7,13 +7,22 @@
         <option name="description" value="" />
         <option name="htmlPlaceholderId" value="" />
         <option name="title" value="Carnet de Trafic" />
-        <option name="vendor" value="" />
+        <option name="vendor" value="Philippe Labbe" />
         <option name="version" value="" />
       </options>
     </properties>
     <root id="root">
-      <element id="archive" name="JavaFXApp.jar">
+      <element id="archive" name="CarnetTrafic.jar">
         <element id="module-output" name="CarnetTrafic" />
+      </element>
+      <element id="directory" name="Database">
+        <element id="file-copy" path="$PROJECT_DIR$/Database/CarnetTrafic.bd" />
+      </element>
+      <element id="directory" name="Properties">
+        <element id="file-copy" path="$PROJECT_DIR$/Properties/Settings.properties" />
+      </element>
+      <element id="directory" name="lib">
+        <element id="library" level="project" name="sqlite-jdbc-3.20.1" />
       </element>
     </root>
   </artifact>

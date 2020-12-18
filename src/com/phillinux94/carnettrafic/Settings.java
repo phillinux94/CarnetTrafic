@@ -17,7 +17,7 @@ public class Settings {
 
             File f = new File("Properties/Settings.properties");
             this.settings = new Properties();
-            this.pathSettings = f.getAbsolutePath();
+            this.pathSettings = f.getPath();
 
         }
         catch (Exception e){

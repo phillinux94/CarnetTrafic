@@ -9,7 +9,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 
 import java.net.URL;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -346,8 +345,8 @@ public class Controller implements Initializable {
             String indicatif = listeQso.get(listeCarnetTrafic.getSelectionModel().getSelectedIndex()).getIndicatif();
 
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setHeaderText("Confirmation de suppression");
-            alert.setContentText("Voulez-vous vraiment supprimer le QSO du " + dateQso + " avec " + indicatif + " ?");
+            alert.setHeaderText("Suppression");
+            alert.setContentText("QSO du " + dateQso + " avec " + indicatif + " ?");
 
             ButtonType buttonOui = new ButtonType("Oui");
             ButtonType buttonNon = new ButtonType("Non");

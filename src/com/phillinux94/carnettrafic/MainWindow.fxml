@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.image.Image?>
@@ -10,57 +15,166 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" style="-fx-background-color: #006666;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.phillinux94.carnettrafic.Controller">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" style="-fx-background-color: #006666;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.phillinux94.carnettrafic.Controller">
    <children>
-      <Pane prefHeight="600.0" prefWidth="282.0" style="-fx-background-color: #006633;">
+      <Pane prefHeight="600.0" prefWidth="282.0" style="-fx-background-color: #2c3e50;">
          <children>
             <ImageView fitHeight="100.0" fitWidth="100.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@img/Logo.png" />
                </image>
             </ImageView>
-            <Button layoutX="33.0" layoutY="247.0" mnemonicParsing="false" onAction="#setCarnetTrafic" prefHeight="45.0" prefWidth="202.0" style="-fx-background-color: #006699; -fx-text-fill: white;" text="Carnet de trafic" />
-            <Button layoutX="33.0" layoutY="354.0" mnemonicParsing="false" onAction="#setCalculLocator" prefHeight="45.0" prefWidth="202.0" style="-fx-background-color: #006699; -fx-text-fill: white;" text="Calcul locator" />
-            <Button layoutX="33.0" layoutY="467.0" mnemonicParsing="false" onAction="#setCalculDistance" prefHeight="45.0" prefWidth="202.0" style="-fx-background-color: #006699; -fx-text-fill: white;" text="Calcul distance" />
-            <Pane fx:id="selBtnCarnetTrafic" layoutX="14.0" layoutY="247.0" prefHeight="45.0" prefWidth="13.0" style="-fx-background-color: yellow;" />
-            <Pane fx:id="selBtnCalculLocator" layoutX="14.0" layoutY="354.0" prefHeight="45.0" prefWidth="13.0" style="-fx-background-color: yellow;" visible="false" />
-            <Pane fx:id="selBtnCalculDistance" layoutX="14.0" layoutY="467.0" prefHeight="45.0" prefWidth="13.0" style="-fx-background-color: yellow;" visible="false" />
+            <Button layoutX="33.0" layoutY="200.0" mnemonicParsing="false" onAction="#setCarnetTrafic" prefHeight="45.0" prefWidth="202.0" style="-fx-background-color: #006699; -fx-text-fill: white;" text="Carnet de trafic" />
+            <Button layoutX="33.0" layoutY="307.0" mnemonicParsing="false" onAction="#setCalculLocator" prefHeight="45.0" prefWidth="202.0" style="-fx-background-color: blue; -fx-text-fill: white;" text="Calcul locator &amp; distance" />
+            <Button layoutX="33.0" layoutY="524.0" mnemonicParsing="false" onAction="#setCalculStatistiques" prefHeight="45.0" prefWidth="202.0" style="-fx-background-color: green; -fx-text-fill: white;" text="Statistiques" />
+            <Pane fx:id="selBtnCarnetTrafic" layoutX="14.0" layoutY="200.0" prefHeight="45.0" prefWidth="13.0" style="-fx-background-color: yellow;" />
+            <Pane fx:id="selBtnCalculLocator" layoutX="14.0" layoutY="307.0" prefHeight="45.0" prefWidth="13.0" style="-fx-background-color: yellow;" visible="false" />
+            <Pane fx:id="selBtnStatistiques" layoutX="14.0" layoutY="524.0" prefHeight="45.0" prefWidth="13.0" style="-fx-background-color: yellow;" visible="false" />
          </children></Pane>
-      <Pane layoutX="295.0" layoutY="14.0" prefHeight="200.0" prefWidth="895.0">
+      <Pane fx:id="paneAjoutQso" layoutX="295.0" layoutY="14.0" prefHeight="210.0" prefWidth="895.0" style="-fx-background-color: #006666;" visible="false">
          <children>
-            <AnchorPane prefHeight="200.0" prefWidth="895.0">
+            <AnchorPane prefHeight="210.0" prefWidth="895.0" style="-fx-background-color: #006666;">
                <children>
-                  <Label layoutX="14.0" layoutY="30.0" text="Indicatif" textFill="#fffbfb" />
-                  <TextField fx:id="fldIndicatifStation" layoutX="98.0" layoutY="25.0" prefHeight="26.0" prefWidth="123.0" style="-fx-alignment: center;" />
-                  <Label layoutX="14.0" layoutY="100.0" text="Latitude" textFill="#fffbfb" />
-                  <Label layoutX="14.0" layoutY="151.0" text="Longitude" textFill="#fffbfb" />
-                  <TextField fx:id="fldLatitudeDegres" layoutX="98.0" layoutY="95.0" prefHeight="26.0" prefWidth="54.0" style="-fx-alignment: center;" />
-                  <TextField fx:id="fldLatitudeMinutes" layoutX="160.0" layoutY="95.0" prefHeight="26.0" prefWidth="54.0" style="-fx-alignment: center;" />
-                  <TextField fx:id="fldLatitudeSecondes" layoutX="221.0" layoutY="95.0" prefHeight="26.0" prefWidth="54.0" style="-fx-alignment: center;" />
-                  <TextField fx:id="fldLongitudeDegres" layoutX="98.0" layoutY="146.0" prefHeight="26.0" prefWidth="54.0" style="-fx-alignment: center;" />
-                  <TextField fx:id="fldLongitudeMinutes" layoutX="160.0" layoutY="146.0" prefHeight="26.0" prefWidth="54.0" style="-fx-alignment: center;" />
-                  <TextField fx:id="fldLongitudeSecondes" layoutX="221.0" layoutY="146.0" prefHeight="26.0" prefWidth="54.0" style="-fx-alignment: center;" />
-                  <Button layoutX="372.0" layoutY="68.0" mnemonicParsing="false" onAction="#calculLocatorLocal" prefHeight="54.0" prefWidth="123.0" style="-fx-alignment: center;" text="Calcul locator station" textAlignment="CENTER" wrapText="true" />
-                  <TextField fx:id="fldLocatorStation" editable="false" layoutX="561.0" layoutY="51.0" prefHeight="84.0" prefWidth="282.0" style="-fx-alignment: center;">
-                     <font>
-                        <Font size="42.0" />
-                     </font>
-                  </TextField>
+                  <Label layoutX="16.0" layoutY="25.0" text="Date" textFill="#f8f7f7" />
+                  <DatePicker fx:id="fldDateQso" layoutX="118.0" layoutY="20.0" prefHeight="31.0" prefWidth="138.0" />
+                  <Label layoutX="14.0" layoutY="65.0" text="Indicatif" textFill="#f8f7f7" />
+                  <TextField fx:id="fldIndicatifQso" layoutX="118.0" layoutY="60.0" prefHeight="31.0" prefWidth="138.0" style="-fx-alignment: center;" />
+                  <Label layoutX="16.0" layoutY="105.0" text="Département" textFill="#f8f7f7" />
+                  <TextField fx:id="fldDepartementQso" layoutX="118.0" layoutY="100.0" prefHeight="31.0" prefWidth="83.0" style="-fx-alignment: center;" />
+                  <Label layoutX="16.0" layoutY="145.0" text="Locator" textFill="#f8f7f7" />
+                  <TextField fx:id="fldLocatorQso" layoutX="118.0" layoutY="140.0" prefHeight="31.0" prefWidth="112.0" style="-fx-alignment: center;" />
+                  <Label layoutX="305.0" layoutY="25.0" text="Bande" textFill="#f8f7f7" />
+                  <Label layoutX="305.0" layoutY="65.0" text="Mode" textFill="#f8f7f7" />
+                  <Label layoutX="307.0" layoutY="105.0" text="QTH" textFill="#f8f7f7" />
+                  <Label layoutX="305.0" layoutY="145.0" text="Prénom" textFill="#f8f7f7" />
+                  <ComboBox fx:id="comboBandeQso" layoutX="388.0" layoutY="20.0" prefHeight="31.0" prefWidth="123.0" />
+                  <ComboBox fx:id="comboModeQso" layoutX="388.0" layoutY="60.0" prefHeight="31.0" prefWidth="123.0" />
+                  <TextField fx:id="fldQthQso" layoutX="388.0" layoutY="100.0" prefHeight="31.0" prefWidth="202.0" style="-fx-alignment: center;" />
+                  <TextField fx:id="fldPrenomQso" layoutX="388.0" layoutY="140.0" prefHeight="31.0" prefWidth="202.0" style="-fx-alignment: center;" />
+                  <Label layoutX="671.0" layoutY="25.0" text="Rst Réception" textFill="#f8f7f7" />
+                  <Label layoutX="675.0" layoutY="105.0" text="Rst Emission" textFill="#f8f7f7" />
+                  <TextField fx:id="fldRstReception" layoutX="675.0" layoutY="50.0" prefHeight="31.0" prefWidth="83.0" style="-fx-alignment: center;" />
+                  <TextField fx:id="fldRstEmission" layoutX="675.0" layoutY="130.0" prefHeight="31.0" prefWidth="83.0" style="-fx-alignment: center;" />
+                  <Button layoutX="789.0" layoutY="166.0" mnemonicParsing="false" onAction="#saveQso" text="Enregistrer" />
                </children>
             </AnchorPane>
          </children>
       </Pane>
-      <TitledPane fx:id="paneCarnetTrafic" animated="false" collapsible="false" layoutX="295.0" layoutY="232.0" prefHeight="355.0" prefWidth="895.0" text="Carnet de trafic">
-        <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-        </content>
-      </TitledPane>
-      <TitledPane fx:id="paneCalculLocator" animated="false" collapsible="false" layoutX="295.0" layoutY="232.0" prefHeight="355.0" prefWidth="895.0" text="Calcul locator" visible="false">
+      <Pane fx:id="paneStation" layoutX="295.0" layoutY="14.0" prefHeight="200.0" prefWidth="895.0">
+         <children>
+            <AnchorPane prefHeight="200.0" prefWidth="895.0">
+               <children>
+                  <Label layoutX="14.0" layoutY="12.0" text="Indicatif" textFill="#fffbfb" />
+                  <TextField fx:id="fldIndicatifStation" layoutX="98.0" layoutY="7.0" prefHeight="26.0" prefWidth="123.0" style="-fx-alignment: center;" />
+                  <Label layoutX="14.0" layoutY="100.0" text="Latitude" textFill="#fffbfb" />
+                  <Label layoutX="14.0" layoutY="161.0" text="Longitude" textFill="#fffbfb" />
+                  <TextField fx:id="fldLocaliteStation" layoutX="98.0" layoutY="53.0" prefHeight="31.0" prefWidth="297.0" style="-fx-alignment: center;" />
+                  <TextField fx:id="fldLatitudeDegres" layoutX="98.0" layoutY="95.0" prefHeight="26.0" prefWidth="54.0" style="-fx-alignment: center;" />
+                  <TextField fx:id="fldLatitudeMinutes" layoutX="160.0" layoutY="95.0" prefHeight="26.0" prefWidth="54.0" style="-fx-alignment: center;" />
+                  <TextField fx:id="fldLatitudeSecondes" layoutX="221.0" layoutY="95.0" prefHeight="26.0" prefWidth="54.0" style="-fx-alignment: center;" />
+                  <TextField fx:id="fldLongitudeDegres" layoutX="98.0" layoutY="156.0" prefHeight="26.0" prefWidth="54.0" style="-fx-alignment: center;" />
+                  <TextField fx:id="fldLongitudeMinutes" layoutX="160.0" layoutY="156.0" prefHeight="26.0" prefWidth="54.0" style="-fx-alignment: center;" />
+                  <TextField fx:id="fldLongitudeSecondes" layoutX="221.0" layoutY="156.0" prefHeight="26.0" prefWidth="54.0" style="-fx-alignment: center;" />
+                  <Button layoutX="432.0" layoutY="77.0" mnemonicParsing="false" onAction="#calculLocatorLocal" prefHeight="36.0" prefWidth="123.0" style="-fx-alignment: center;" text="Enregistrer" textAlignment="CENTER" wrapText="true" />
+                  <TextField fx:id="fldLocatorStation" editable="false" layoutX="588.0" layoutY="50.0" prefHeight="84.0" prefWidth="282.0" style="-fx-alignment: center;">
+                     <font>
+                        <Font size="42.0" />
+                     </font>
+                  </TextField>
+                  <ChoiceBox fx:id="comboLatitude" layoutX="284.0" layoutY="95.0" prefHeight="31.0" prefWidth="112.0" />
+                  <ChoiceBox fx:id="comboLongitude" layoutX="284.0" layoutY="156.0" prefHeight="31.0" prefWidth="112.0" />
+                  <Label fx:id="labStatutSaisie" layoutX="99.0" layoutY="68.0" prefHeight="21.0" prefWidth="297.0" textFill="#fffbfb" />
+                  <Label layoutX="120.0" layoutY="126.0" text="°" textFill="#fffbfb">
+                     <font>
+                        <Font size="25.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="184.0" layoutY="126.0" text="'" textFill="#fffbfb">
+                     <font>
+                        <Font size="25.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="243.0" layoutY="126.0" text="&quot;" textFill="#fffbfb">
+                     <font>
+                        <Font size="25.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="704.0" layoutY="20.0" text="Locator" textFill="#fffbfb" />
+                  <Label layoutX="15.0" layoutY="58.0" text="Ville" textFill="#fffbfb" />
+               </children>
+            </AnchorPane>
+         </children>
+      </Pane>
+      <TitledPane fx:id="paneCarnetTrafic" animated="false" collapsible="false" layoutX="295.0" layoutY="232.0" prefHeight="355.0" prefWidth="895.0" text="Carnet de trafic" visible="false">
          <content>
-            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <TableView fx:id="listeCarnetTrafic" layoutX="14.0" layoutY="62.0" prefHeight="255.0" prefWidth="870.0">
+                     <columns>
+                        <TableColumn fx:id="tableId" prefWidth="42.0" style="-fx-alignment: center;" text="N°" />
+                        <TableColumn fx:id="tableDate" prefWidth="99.0" style="-fx-alignment: center;" text="Date" />
+                        <TableColumn fx:id="tableIndicatif" prefWidth="91.0" style="-fx-alignment: center;" text="Indicatif" />
+                        <TableColumn fx:id="tableDepartement" prefWidth="66.0" style="-fx-alignment: center;" text="Départ." />
+                        <TableColumn fx:id="tableLocator" prefWidth="98.0" style="-fx-alignment: center;" text="Locator" />
+                        <TableColumn fx:id="tableBande" prefWidth="69.0" style="-fx-alignment: center;" text="Bande" />
+                        <TableColumn fx:id="tableMode" prefWidth="52.0" style="-fx-alignment: center;" text="Mode" />
+                        <TableColumn fx:id="tableQth" prefWidth="131.0" style="-fx-alignment: center;" text="QTH" />
+                        <TableColumn fx:id="tableRst_r" prefWidth="49.0" style="-fx-alignment: center;" text="Rst R" />
+                        <TableColumn fx:id="tableRst_e" prefWidth="54.0" style="-fx-alignment: center;" text="Rst E" />
+                        <TableColumn fx:id="tablePrenom" prefWidth="121.0" style="-fx-alignment: center;" text="Prénom" />
+                     </columns>
+                  </TableView>
+                  <Button layoutX="300.0" layoutY="21.0" mnemonicParsing="false" onAction="#ajoutQso" text="+" />
+                  <Button layoutX="523.0" layoutY="21.0" mnemonicParsing="false" onAction="#deleteQso" text="-" />
+               </children></AnchorPane>
          </content>
       </TitledPane>
-      <TitledPane fx:id="paneCalculDistance" animated="false" collapsible="false" layoutX="295.0" layoutY="232.0" prefHeight="355.0" prefWidth="895.0" text="Calcul distance" visible="false">
+      <TitledPane fx:id="paneCalculLocator" animated="false" collapsible="false" layoutX="295.0" layoutY="232.0" prefHeight="355.0" prefWidth="895.0" text="Calcul locator">
+         <content>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <Label layoutX="350.0" layoutY="20.0" text="Coordonnées géographiques" />
+                  <Label layoutX="224.0" layoutY="87.0" text="Latitude" />
+                  <Label layoutX="224.0" layoutY="142.0" text="Longitude" />
+                  <TextField fx:id="fldCalLatitudeDegres" layoutX="331.0" layoutY="75.0" prefHeight="26.0" prefWidth="54.0" style="-fx-alignment: center;" />
+                  <TextField fx:id="fldCalLatitudeMinutes" layoutX="394.0" layoutY="75.0" prefHeight="26.0" prefWidth="54.0" style="-fx-alignment: center;" />
+                  <TextField fx:id="fldCalLatitudeSecondes" layoutX="455.0" layoutY="75.0" prefHeight="26.0" prefWidth="54.0" style="-fx-alignment: center;" />
+                  <TextField fx:id="fldCalLongitudeDegres" layoutX="331.0" layoutY="137.0" prefHeight="26.0" prefWidth="54.0" style="-fx-alignment: center;" />
+                  <TextField fx:id="fldCalLongitudeMinutes" layoutX="394.0" layoutY="137.0" prefHeight="26.0" prefWidth="54.0" style="-fx-alignment: center;" />
+                  <TextField fx:id="fldCalLongitudeSecondes" layoutX="455.0" layoutY="137.0" prefHeight="26.0" prefWidth="54.0" style="-fx-alignment: center;" />
+                  <ChoiceBox fx:id="comboCalLatitude" layoutX="536.0" layoutY="77.0" prefHeight="31.0" prefWidth="112.0" />
+                  <ChoiceBox fx:id="comboCalLongitude" layoutX="536.0" layoutY="137.0" prefHeight="31.0" prefWidth="112.0" />
+                  <Label layoutX="352.0" layoutY="108.0" text="°" textFill="#111010">
+                     <font>
+                        <Font size="25.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="fldCalLocator" editable="false" layoutX="142.0" layoutY="219.0" prefHeight="84.0" prefWidth="282.0" style="-fx-alignment: center;">
+                     <font>
+                        <Font size="42.0" />
+                     </font>
+                  </TextField>
+                  <Label layoutX="418.0" layoutY="108.0" text="'" textFill="#111010">
+                     <font>
+                        <Font size="25.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="477.0" layoutY="108.0" text="&quot;" textFill="#111010">
+                     <font>
+                        <Font size="25.0" />
+                     </font>
+                  </Label>
+                  <Button layoutX="364.0" layoutY="180.0" mnemonicParsing="false" onAction="#calculLocator" text="Calcul" />
+                  <Button layoutX="466.0" layoutY="180.0" mnemonicParsing="false" onAction="#razCalculLocator" text="RAZ" />
+                  <TextField fx:id="fldCalDistance" editable="false" layoutX="466.0" layoutY="219.0" prefHeight="84.0" prefWidth="282.0" style="-fx-alignment: center;">
+                     <font>
+                        <Font size="42.0" />
+                     </font>
+                  </TextField>
+               </children></AnchorPane>
+         </content>
+      </TitledPane>
+      <TitledPane fx:id="paneCalculStatistiques" animated="false" collapsible="false" layoutX="295.0" layoutY="232.0" prefHeight="355.0" prefWidth="895.0" text="Statistiques" visible="false">
          <content>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
          </content>

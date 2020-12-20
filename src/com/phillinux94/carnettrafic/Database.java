@@ -46,7 +46,7 @@ public class Database {
                                     "QSO_QTH                TEXT, " +
                                     "QSO_RST_R              TEXT, " +
                                     "QSO_RST_E              TEXT, " +
-                                    "QSO_PRENOM             TEXT)";
+                                    "QSO_DISTANCE           INT)";
 
             this.stmt.execute(createTableQso);
 
@@ -61,14 +61,14 @@ public class Database {
     }
 
     public void insertQso(int id, LocalDate dateQso, String indicatifQso, String departQso, String locatorQso,
-                          String bandeQso, String modeQso, String qthQso, String rst_r, String rst_e, String prenomQso){
+                          String bandeQso, String modeQso, String qthQso, String rst_r, String rst_e, int distance){
 
         try {
 
             Date locDateQso = Date.valueOf(dateQso);
 
             String insertSql =  "INSERT INTO QSO (ID, QSO_DATE, QSO_INDICATIF, QSO_DEPARTEMENT, QSO_LOCATOR, QSO_BANDE,  " +
-                                "QSO_MODE, QSO_QTH, QSO_RST_R, QSO_RST_E, QSO_PRENOM) " +
+                                "QSO_MODE, QSO_QTH, QSO_RST_R, QSO_RST_E, QSO_DISTANCE) " +
                                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             this.write = this.conn.prepareStatement(insertSql);
@@ -83,7 +83,7 @@ public class Database {
             this.write.setString(8, qthQso);
             this.write.setString(9, rst_r);
             this.write.setString(10, rst_e);
-            this.write.setString(11, prenomQso);
+            this.write.setInt(11, distance);
 
             this.write.addBatch();
 
@@ -120,7 +120,7 @@ public class Database {
                 temp.add(rs.getString("QSO_QTH"));
                 temp.add(rs.getString("QSO_RST_R"));
                 temp.add(rs.getString("QSO_RST_E"));
-                temp.add(rs.getString("QSO_PRENOM"));
+                temp.add(rs.getString("QSO_DISTANCE"));
 
                 listeQso.add(temp);
 

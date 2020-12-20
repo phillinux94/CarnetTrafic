@@ -109,7 +109,7 @@
             </AnchorPane>
          </children>
       </Pane>
-      <TitledPane fx:id="paneCarnetTrafic" animated="false" collapsible="false" layoutX="295.0" layoutY="232.0" prefHeight="355.0" prefWidth="895.0" text="Carnet de trafic" visible="false">
+      <TitledPane fx:id="paneCarnetTrafic" animated="false" collapsible="false" layoutX="295.0" layoutY="232.0" prefHeight="355.0" prefWidth="895.0" text="Carnet de trafic">
          <content>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
@@ -122,10 +122,10 @@
                         <TableColumn fx:id="tableLocator" prefWidth="98.0" style="-fx-alignment: center;" text="Locator" />
                         <TableColumn fx:id="tableBande" prefWidth="69.0" style="-fx-alignment: center;" text="Bande" />
                         <TableColumn fx:id="tableMode" prefWidth="52.0" style="-fx-alignment: center;" text="Mode" />
-                        <TableColumn fx:id="tableQth" prefWidth="131.0" style="-fx-alignment: center;" text="QTH" />
-                        <TableColumn fx:id="tableRst_r" prefWidth="49.0" style="-fx-alignment: center;" text="Rst R" />
-                        <TableColumn fx:id="tableRst_e" prefWidth="54.0" style="-fx-alignment: center;" text="Rst E" />
-                        <TableColumn fx:id="tablePrenom" prefWidth="121.0" style="-fx-alignment: center;" text="Prénom" />
+                        <TableColumn fx:id="tableQth" prefWidth="160.0" style="-fx-alignment: center;" text="QTH" />
+                        <TableColumn fx:id="tableRst_r" prefWidth="50.0" style="-fx-alignment: center;" text="Rst R" />
+                        <TableColumn fx:id="tableRst_e" prefWidth="51.0" style="-fx-alignment: center;" text="Rst E" />
+                        <TableColumn fx:id="tableDistance" prefWidth="94.0" style="-fx-alignment: center;" text="Distance" />
                      </columns>
                   </TableView>
                   <Button layoutX="300.0" layoutY="21.0" mnemonicParsing="false" onAction="#ajoutQso" text="+" />
@@ -133,7 +133,7 @@
                </children></AnchorPane>
          </content>
       </TitledPane>
-      <TitledPane fx:id="paneCalculLocator" animated="false" collapsible="false" layoutX="295.0" layoutY="232.0" prefHeight="355.0" prefWidth="895.0" text="Calcul locator &amp; distance">
+      <TitledPane fx:id="paneCalculLocator" animated="false" collapsible="false" layoutX="295.0" layoutY="232.0" prefHeight="355.0" prefWidth="895.0" text="Calcul locator &amp; distance" visible="false">
          <content>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>

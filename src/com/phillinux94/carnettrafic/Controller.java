@@ -142,7 +142,7 @@ public class Controller implements Initializable {
     private TableColumn<QSO, String> tableRst_e;
 
     @FXML
-    private TableColumn<QSO, String> tablePrenom;
+    private TableColumn<QSO, String> tableDistance;
 
     // Calcul des locator
     @FXML
@@ -327,7 +327,7 @@ public class Controller implements Initializable {
 
         data.insertQso(idQso, fldDateQso.getValue(), fldIndicatifQso.getText(), fldDepartementQso.getText(), fldLocatorQso.getText(),
                 comboBandeQso.getSelectionModel().getSelectedItem().toString(), comboModeQso.getSelectionModel().getSelectedItem().toString(),
-                fldQthQso.getText(), fldRstReception.getText(), fldRstEmission.getText(), fldPrenomQso.getText());
+                fldQthQso.getText(), fldRstReception.getText(), fldRstEmission.getText(), 10);
         data.closeDatabase();
 
         refreshListeQso();
@@ -492,9 +492,9 @@ public class Controller implements Initializable {
                 String qth = (String) qso.get(7);
                 String rst_r = (String) qso.get(8);
                 String rst_e = (String) qso.get(9);
-                String prenom = (String) qso.get(10);
+                int distance = (int) qso.get(10);
 
-                QSO qso1 = new QSO(id, date, indicatif, departement, locator, bande, mode, qth, rst_r, rst_e, prenom);
+                QSO qso1 = new QSO(id, date, indicatif, departement, locator, bande, mode, qth, rst_r, rst_e, distance);
 
                 qsoDatas.add(qso1);
 
@@ -574,10 +574,10 @@ public class Controller implements Initializable {
 
             });
 
-            tablePrenom.setCellValueFactory(dataTable ->
+            tableDistance.setCellValueFactory(dataTable ->
             {
 
-                return new ReadOnlyStringWrapper(dataTable.getValue().getPrenom());
+                return new ReadOnlyStringWrapper(dataTable.getValue().getDistance());
 
             });
 

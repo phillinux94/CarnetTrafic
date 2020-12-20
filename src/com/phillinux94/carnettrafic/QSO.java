@@ -14,14 +14,14 @@ public class QSO {
     private String qth;
     private String rst_r;
     private String rst_e;
-    private String prenom;
+    private int distance;
 
     QSO(){
 
     }
 
     QSO(int id, LocalDate date, String indicatif, String departement, String locator, String bande, String mode,
-        String qth, String rst_r, String rst_e, String prenom){
+        String qth, String rst_r, String rst_e, int distance){
 
         this.id = id;
         this.date = date;
@@ -33,7 +33,7 @@ public class QSO {
         this.qth = qth;
         this.rst_r = rst_r;
         this.rst_e = rst_e;
-        this.prenom = prenom;
+        this.distance = distance;
 
     }
 
@@ -98,9 +98,9 @@ public class QSO {
         return this.rst_e;
 
     }
-    public String getPrenom(){
+    public String getDistance(){
 
-        return this.prenom;
+        return String.valueOf(this.distance);
 
     }
 
@@ -154,9 +154,9 @@ public class QSO {
         this.rst_e = rst_e;
 
     }
-    public void setPrenom(String prenom){
+    public void setDistance(int distance){
 
-        this.prenom = prenom;
+        this.distance = distance;
 
     }
 

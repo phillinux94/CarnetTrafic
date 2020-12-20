@@ -109,7 +109,7 @@
             </AnchorPane>
          </children>
       </Pane>
-      <TitledPane fx:id="paneCarnetTrafic" animated="false" collapsible="false" layoutX="295.0" layoutY="232.0" prefHeight="355.0" prefWidth="895.0" text="Carnet de trafic" visible="false">
+      <TitledPane fx:id="paneCarnetTrafic" animated="false" collapsible="false" layoutX="295.0" layoutY="232.0" prefHeight="355.0" prefWidth="895.0" text="Carnet de trafic">
          <content>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
@@ -133,7 +133,7 @@
                </children></AnchorPane>
          </content>
       </TitledPane>
-      <TitledPane fx:id="paneCalculLocator" animated="false" collapsible="false" layoutX="295.0" layoutY="232.0" prefHeight="355.0" prefWidth="895.0" text="Calcul locator &amp; distance">
+      <TitledPane fx:id="paneCalculLocator" animated="false" collapsible="false" layoutX="295.0" layoutY="232.0" prefHeight="355.0" prefWidth="895.0" text="Calcul locator &amp; distance" visible="false">
          <content>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>

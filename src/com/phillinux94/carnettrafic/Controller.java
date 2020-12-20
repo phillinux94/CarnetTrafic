@@ -439,7 +439,7 @@ public class Controller implements Initializable {
                     longitudeLocDegres, longitudeLocMinutes, longitudeLocSecondes, longitudeLocSituation);
 
             fldCalDistance.setText(distanceStation.getDistance(latitudeDegres, latitudeMinutes, latitudeSecondes, latitudeSituation,
-                    longitudeDegres, longitudeMinutes, longitudeSecondes, longitudeSituation) + " kms");
+                    longitudeDegres, longitudeMinutes, longitudeSecondes, longitudeSituation));
 
         }
         catch (Exception e){

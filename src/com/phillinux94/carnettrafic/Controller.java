@@ -169,13 +169,17 @@ public class Controller implements Initializable {
     @FXML
     private TextField fldCalDistance;
 
-
-
     @FXML
     private ChoiceBox comboCalLatitude;
 
     @FXML
     private ChoiceBox comboCalLongitude;
+
+    @FXML
+    private TextField fldLocatorDistant;
+
+    @FXML
+    private TextField fldDistanceLocator;
 
 
     @FXML
@@ -585,6 +589,74 @@ public class Controller implements Initializable {
         }
     }
 
+    @FXML
+    private void calculDistanceLocator(){
+
+        ArrayList coordonnees = null;
+
+        double latitudeDegres;
+        double latitudeMinutes;
+        double latitudeSecondes;
+        double longitudeDegres;
+        double longitudeMinutes;
+        double longitudeSecondes;
+        String latitudeSituation;
+        String longitudeSituation;
+
+        double latitudeDistDegres;
+        double latitudeDistMinutes;
+        double latitudeDistSecondes;
+        double longitudeDistDegres;
+        double longitudeDistMinutes;
+        double longitudeDistSecondes;
+        String latitudeDistSituation;
+        String longitudeDistSituation;
+
+        try {
+
+            latitudeDegres = Double.parseDouble(fldLatitudeDegres.getText());
+            latitudeMinutes = Double.parseDouble(fldLatitudeMinutes.getText());
+            latitudeSecondes = Double.parseDouble(fldLatitudeSecondes.getText());
+
+            longitudeDegres = Double.parseDouble(fldLongitudeDegres.getText());
+            longitudeMinutes = Double.parseDouble(fldLongitudeMinutes.getText());
+            longitudeSecondes = Double.parseDouble(fldLongitudeSecondes.getText());
+
+            latitudeSituation = comboLatitude.getSelectionModel().getSelectedItem().toString();
+            longitudeSituation = comboLongitude.getSelectionModel().getSelectedItem().toString();
+
+            Locator calculDistance = new Locator(latitudeDegres, latitudeMinutes, latitudeSecondes, latitudeSituation,
+                    longitudeDegres, longitudeMinutes, longitudeSecondes, longitudeSituation);
+
+            coordonnees = calculDistance.ConvertLocatorToCoordinates(fldLocatorDistant.getText());
+
+            System.out.println(coordonnees);
+
+            latitudeDistDegres = Double.valueOf(coordonnees.get(0).toString());
+            latitudeDistMinutes = Double.valueOf(coordonnees.get(1).toString());
+            latitudeDistSecondes = Double.valueOf(coordonnees.get(2).toString());
+            latitudeDistSituation = coordonnees.get(3).toString();
+
+            longitudeDistDegres = Double.valueOf(coordonnees.get(4).toString());
+            longitudeDistMinutes = Double.valueOf(coordonnees.get(5).toString());
+            longitudeDistSecondes = Double.valueOf(coordonnees.get(6).toString());
+            longitudeDistSituation = coordonnees.get(7).toString();
+
+            String distance = calculDistance.getDistance(latitudeDistDegres, latitudeDistMinutes, latitudeDistSecondes, latitudeDistSituation,
+                    longitudeDistDegres, longitudeDistMinutes, longitudeDistSecondes, longitudeDistSituation);
+
+            fldDistanceLocator.setText(distance);
+
+
+        }
+        catch (Exception e){
+
+            System.out.println(e.getMessage());
+
+        }
+
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -633,5 +705,6 @@ public class Controller implements Initializable {
 
         // Rafraichissement de la liste
         refreshListeQso();
+
     }
 }

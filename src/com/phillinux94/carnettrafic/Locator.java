@@ -103,12 +103,12 @@ public class Locator {
 
         locator += Character.toString((char) (L5 + 65));
         locator += Character.toString((char) (L6 + 65));
-        
+
         return locator;
     }
 
     public String getDistance(double latitudeLocDegres, double latitudeLocMinutes, double latitudeLocSecondes, String latitudeLocPosition,
-                           double longitudeLocDegres, double longitudeLocMinutes, double longitudeLocSecondes, String longitudeLocPosition){
+                              double longitudeLocDegres, double longitudeLocMinutes, double longitudeLocSecondes, String longitudeLocPosition){
 
         int distance = 0;
 
@@ -342,8 +342,8 @@ public class Locator {
 
         }
         else {
-            longitudeDegres = longitude1.get(c1) - longitude2.get(c3) - 2 - longitude3.get(c5);
-            longitudeMinutes = longitude4.get(c5);
+            longitudeDegres = longitude1.get(c1) - longitude2.get(c3) - 1 - longitude3.get(c5);
+            longitudeMinutes = 60 - longitude4.get(c5);
             longitudeSecondes = 0;
         }
 

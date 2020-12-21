@@ -5,6 +5,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Side;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 
@@ -181,6 +185,17 @@ public class Controller implements Initializable {
     @FXML
     private TextField fldDistanceLocator;
 
+    // Statistiques
+    @FXML
+    private TextField fldStatNbQso;
+
+    @FXML
+    private PieChart chart1;
+
+    @FXML
+    private LineChart<String, Number> chart2;
+
+
 
     @FXML
     private void setCarnetTrafic(){
@@ -322,15 +337,91 @@ public class Controller implements Initializable {
     @FXML
     private void saveQso(){
 
-        Database data = new Database();
-        int idQso = data.getMaxId() + 1;
+        // Calcul de la distance
+        ArrayList coordonnees = null;
 
-        data.insertQso(idQso, fldDateQso.getValue(), fldIndicatifQso.getText(), fldDepartementQso.getText(), fldLocatorQso.getText(),
-                comboBandeQso.getSelectionModel().getSelectedItem().toString(), comboModeQso.getSelectionModel().getSelectedItem().toString(),
-                fldQthQso.getText(), fldRstReception.getText(), fldRstEmission.getText(), 10);
+        double latitudeDegres;
+        double latitudeMinutes;
+        double latitudeSecondes;
+        double longitudeDegres;
+        double longitudeMinutes;
+        double longitudeSecondes;
+        String latitudeSituation;
+        String longitudeSituation;
+
+        double latitudeDistDegres = 0;
+        double latitudeDistMinutes = 0;
+        double latitudeDistSecondes = 0;
+        double longitudeDistDegres = 0;
+        double longitudeDistMinutes = 0;
+        double longitudeDistSecondes = 0;
+        String latitudeDistSituation = "";
+        String longitudeDistSituation = "";
+
+        Database data = new Database();
+
+        try {
+
+            latitudeDegres = Double.parseDouble(fldLatitudeDegres.getText());
+            latitudeMinutes = Double.parseDouble(fldLatitudeMinutes.getText());
+            latitudeSecondes = Double.parseDouble(fldLatitudeSecondes.getText());
+
+            longitudeDegres = Double.parseDouble(fldLongitudeDegres.getText());
+            longitudeMinutes = Double.parseDouble(fldLongitudeMinutes.getText());
+            longitudeSecondes = Double.parseDouble(fldLongitudeSecondes.getText());
+
+            latitudeSituation = comboLatitude.getSelectionModel().getSelectedItem().toString();
+            longitudeSituation = comboLongitude.getSelectionModel().getSelectedItem().toString();
+
+            Locator calculDistance = new Locator(latitudeDegres, latitudeMinutes, latitudeSecondes, latitudeSituation,
+                    longitudeDegres, longitudeMinutes, longitudeSecondes, longitudeSituation);
+
+            if (fldLocatorQso.getText().length() == 6){
+
+                coordonnees = calculDistance.ConvertLocatorToCoordinates(fldLocatorQso.getText());
+
+                latitudeDistDegres = Double.valueOf(coordonnees.get(0).toString());
+                latitudeDistMinutes = Double.valueOf(coordonnees.get(1).toString());
+                latitudeDistSecondes = Double.valueOf(coordonnees.get(2).toString());
+                latitudeDistSituation = coordonnees.get(3).toString();
+
+                longitudeDistDegres = Double.valueOf(coordonnees.get(4).toString());
+                longitudeDistMinutes = Double.valueOf(coordonnees.get(5).toString());
+                longitudeDistSecondes = Double.valueOf(coordonnees.get(6).toString());
+                longitudeDistSituation = coordonnees.get(7).toString();
+
+            }
+
+
+            System.out.println(coordonnees);
+
+
+            int idQso = data.getMaxId() + 1;
+            String distance = "0";
+
+            if (fldLocatorQso.getText().length() == 6){
+
+                distance = calculDistance.getDistance(latitudeDistDegres, latitudeDistMinutes, latitudeDistSecondes, latitudeDistSituation,
+                        longitudeDistDegres, longitudeDistMinutes, longitudeDistSecondes, longitudeDistSituation);
+
+            }
+
+
+            data.insertQso(idQso, fldDateQso.getValue(), fldIndicatifQso.getText(), fldDepartementQso.getText(), fldLocatorQso.getText(),
+                    comboBandeQso.getSelectionModel().getSelectedItem().toString(), comboModeQso.getSelectionModel().getSelectedItem().toString(),
+                    fldQthQso.getText(), fldRstReception.getText(), fldRstEmission.getText(), Integer.valueOf(distance));
+
+
+        }
+        catch (Exception e){
+
+            System.out.println(e.getMessage());
+
+        }
         data.closeDatabase();
 
         refreshListeQso();
+        calStatistiques();
 
         paneStation.setVisible(true);
         paneAjoutQso.setVisible(false);
@@ -368,6 +459,7 @@ public class Controller implements Initializable {
 
                 // Rafraichissement de la liste
                 refreshListeQso();
+                calStatistiques();
 
             }
 
@@ -462,6 +554,201 @@ public class Controller implements Initializable {
         fldCalLongitudeSecondes.setText("");
         fldCalLocator.setText("");
         fldCalDistance.setText("");
+
+    }
+
+
+    @FXML
+    private void calculDistanceLocator(){
+
+        ArrayList coordonnees = null;
+
+        double latitudeDegres;
+        double latitudeMinutes;
+        double latitudeSecondes;
+        double longitudeDegres;
+        double longitudeMinutes;
+        double longitudeSecondes;
+        String latitudeSituation;
+        String longitudeSituation;
+
+        double latitudeDistDegres;
+        double latitudeDistMinutes;
+        double latitudeDistSecondes;
+        double longitudeDistDegres;
+        double longitudeDistMinutes;
+        double longitudeDistSecondes;
+        String latitudeDistSituation;
+        String longitudeDistSituation;
+
+        try {
+
+            latitudeDegres = Double.parseDouble(fldLatitudeDegres.getText());
+            latitudeMinutes = Double.parseDouble(fldLatitudeMinutes.getText());
+            latitudeSecondes = Double.parseDouble(fldLatitudeSecondes.getText());
+
+            longitudeDegres = Double.parseDouble(fldLongitudeDegres.getText());
+            longitudeMinutes = Double.parseDouble(fldLongitudeMinutes.getText());
+            longitudeSecondes = Double.parseDouble(fldLongitudeSecondes.getText());
+
+            latitudeSituation = comboLatitude.getSelectionModel().getSelectedItem().toString();
+            longitudeSituation = comboLongitude.getSelectionModel().getSelectedItem().toString();
+
+            Locator calculDistance = new Locator(latitudeDegres, latitudeMinutes, latitudeSecondes, latitudeSituation,
+                    longitudeDegres, longitudeMinutes, longitudeSecondes, longitudeSituation);
+
+            coordonnees = calculDistance.ConvertLocatorToCoordinates(fldLocatorDistant.getText());
+
+            System.out.println(coordonnees);
+
+            latitudeDistDegres = Double.valueOf(coordonnees.get(0).toString());
+            latitudeDistMinutes = Double.valueOf(coordonnees.get(1).toString());
+            latitudeDistSecondes = Double.valueOf(coordonnees.get(2).toString());
+            latitudeDistSituation = coordonnees.get(3).toString();
+
+            longitudeDistDegres = Double.valueOf(coordonnees.get(4).toString());
+            longitudeDistMinutes = Double.valueOf(coordonnees.get(5).toString());
+            longitudeDistSecondes = Double.valueOf(coordonnees.get(6).toString());
+            longitudeDistSituation = coordonnees.get(7).toString();
+
+            String distance = calculDistance.getDistance(latitudeDistDegres, latitudeDistMinutes, latitudeDistSecondes, latitudeDistSituation,
+                    longitudeDistDegres, longitudeDistMinutes, longitudeDistSecondes, longitudeDistSituation);
+
+            fldDistanceLocator.setText(distance);
+
+
+        }
+        catch (Exception e){
+
+            System.out.println(e.getMessage());
+
+        }
+
+    }
+
+    @FXML
+    private void setStatByDistance(){
+
+        chart1.setVisible(true);
+        chart2.setVisible(false);
+
+    }
+
+    @FXML
+    private void setStatByMois(){
+
+        chart1.setVisible(false);
+        chart2.setVisible(true);
+
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+        // Initialisation des combos coordonnées géographiques
+        comboLatitude.getItems().add("Nord");
+        comboLatitude.getItems().add("Sud");
+
+        comboLongitude.getItems().add("Est");
+        comboLongitude.getItems().add("Ouest");
+
+        comboCalLatitude.getItems().add("Nord");
+        comboCalLatitude.getItems().add("Sud");
+
+        comboCalLongitude.getItems().add("Est");
+        comboCalLongitude.getItems().add("Ouest");
+
+
+
+        // Initialisation des combos QSO
+        comboBandeQso.getItems().add("27 Mhz");
+        comboBandeQso.getItems().add("446 Mhz");
+
+        comboModeQso.getItems().add("DIG");
+        comboModeQso.getItems().add("AM");
+        comboModeQso.getItems().add("FM");
+        comboModeQso.getItems().add("USB");
+        comboModeQso.getItems().add("LSB");
+
+        // Récupération des coordonnées de la station
+        Settings settings = new Settings();
+        fldIndicatifStation.setText(settings.getIndicatifStation());
+        fldLocatorStation.setText(settings.getLocatorStation());
+        fldLocaliteStation.setText(settings.getLocaliteStation());
+
+        fldLatitudeDegres.setText(settings.getLatitudeDegresStation());
+        fldLatitudeMinutes.setText(settings.getLatitudeMinutesStation());
+        fldLatitudeSecondes.setText(settings.getLatitudeSecondesStation());
+        comboLatitude.getSelectionModel().select(settings.getLatitudeSituationStation());
+
+        fldLongitudeDegres.setText(settings.getLongitudeDegresStation());
+        fldLongitudeMinutes.setText(settings.getLongitudeMinutesStation());
+        fldLongitudeSecondes.setText(settings.getLongitudeSecondesStation());
+        comboLongitude.getSelectionModel().select(settings.getLongitudeSituationStation());
+
+        settings.closeInputSettings();
+
+        // Rafraichissement de la liste
+        refreshListeQso();
+
+        calStatistiques();
+
+    }
+
+    private void calStatistiques(){
+
+        // Tests statistiques
+        Database db = new Database();
+
+        ArrayList statByTranche = db.getStatisticsByDistance();
+        int nbQso = db.getNbQso();
+
+        ArrayList statByDate = db.getStatisticsByDate();
+
+        db.closeDatabase();
+
+        // Nombre total de QSO
+        fldStatNbQso.setText(String.valueOf(nbQso));
+
+        // Nombre de QSO par tranche de distance
+        ArrayList tranche = new ArrayList();
+
+        chart1.getData().clear();
+
+        for (int i = 0; i < statByTranche.size(); i++){
+
+            tranche = (ArrayList) statByTranche.get(i);
+            String libTranche = (String) tranche.get(0);
+            int nbQsoTranche = (int) tranche.get(1);
+
+            PieChart.Data slice = new PieChart.Data(libTranche, nbQsoTranche);
+            chart1.getData().add(slice);
+
+        }
+        chart1.setLegendVisible(true);
+        chart1.setLabelsVisible(false);
+        chart1.setLegendSide(Side.LEFT);
+        chart1.setTitle("Nb de QSO par tranche de distance");
+        chart1.setStartAngle(90);
+
+        // Evolution mensuelle du nombre de QSO
+        ArrayList date = new ArrayList();
+
+        chart2.getData().clear();
+
+        XYChart.Series<String, Number> series1 = new XYChart.Series<>();
+        series1.setName("Evolution mensuelle du nb de QSO");
+
+        for (int i = 0; i < statByDate.size(); i++){
+
+            date = (ArrayList) statByDate.get(i);
+            String libDate = (String) date.get(0);
+            int nbQsoDate = (int) date.get(1);
+
+            series1.getData().add(new XYChart.Data<>(libDate, nbQsoDate));
+
+        }
+        chart2.getData().add(series1);
 
     }
 
@@ -587,124 +874,5 @@ public class Controller implements Initializable {
             System.out.println(e.getMessage());
 
         }
-    }
-
-    @FXML
-    private void calculDistanceLocator(){
-
-        ArrayList coordonnees = null;
-
-        double latitudeDegres;
-        double latitudeMinutes;
-        double latitudeSecondes;
-        double longitudeDegres;
-        double longitudeMinutes;
-        double longitudeSecondes;
-        String latitudeSituation;
-        String longitudeSituation;
-
-        double latitudeDistDegres;
-        double latitudeDistMinutes;
-        double latitudeDistSecondes;
-        double longitudeDistDegres;
-        double longitudeDistMinutes;
-        double longitudeDistSecondes;
-        String latitudeDistSituation;
-        String longitudeDistSituation;
-
-        try {
-
-            latitudeDegres = Double.parseDouble(fldLatitudeDegres.getText());
-            latitudeMinutes = Double.parseDouble(fldLatitudeMinutes.getText());
-            latitudeSecondes = Double.parseDouble(fldLatitudeSecondes.getText());
-
-            longitudeDegres = Double.parseDouble(fldLongitudeDegres.getText());
-            longitudeMinutes = Double.parseDouble(fldLongitudeMinutes.getText());
-            longitudeSecondes = Double.parseDouble(fldLongitudeSecondes.getText());
-
-            latitudeSituation = comboLatitude.getSelectionModel().getSelectedItem().toString();
-            longitudeSituation = comboLongitude.getSelectionModel().getSelectedItem().toString();
-
-            Locator calculDistance = new Locator(latitudeDegres, latitudeMinutes, latitudeSecondes, latitudeSituation,
-                    longitudeDegres, longitudeMinutes, longitudeSecondes, longitudeSituation);
-
-            coordonnees = calculDistance.ConvertLocatorToCoordinates(fldLocatorDistant.getText());
-
-            System.out.println(coordonnees);
-
-            latitudeDistDegres = Double.valueOf(coordonnees.get(0).toString());
-            latitudeDistMinutes = Double.valueOf(coordonnees.get(1).toString());
-            latitudeDistSecondes = Double.valueOf(coordonnees.get(2).toString());
-            latitudeDistSituation = coordonnees.get(3).toString();
-
-            longitudeDistDegres = Double.valueOf(coordonnees.get(4).toString());
-            longitudeDistMinutes = Double.valueOf(coordonnees.get(5).toString());
-            longitudeDistSecondes = Double.valueOf(coordonnees.get(6).toString());
-            longitudeDistSituation = coordonnees.get(7).toString();
-
-            String distance = calculDistance.getDistance(latitudeDistDegres, latitudeDistMinutes, latitudeDistSecondes, latitudeDistSituation,
-                    longitudeDistDegres, longitudeDistMinutes, longitudeDistSecondes, longitudeDistSituation);
-
-            fldDistanceLocator.setText(distance);
-
-
-        }
-        catch (Exception e){
-
-            System.out.println(e.getMessage());
-
-        }
-
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-
-        // Initialisation des combos coordonnées géographiques
-        comboLatitude.getItems().add("Nord");
-        comboLatitude.getItems().add("Sud");
-
-        comboLongitude.getItems().add("Est");
-        comboLongitude.getItems().add("Ouest");
-
-        comboCalLatitude.getItems().add("Nord");
-        comboCalLatitude.getItems().add("Sud");
-
-        comboCalLongitude.getItems().add("Est");
-        comboCalLongitude.getItems().add("Ouest");
-
-
-
-        // Initialisation des combos QSO
-        comboBandeQso.getItems().add("27 Mhz");
-        comboBandeQso.getItems().add("446 Mhz");
-
-        comboModeQso.getItems().add("DIG");
-        comboModeQso.getItems().add("AM");
-        comboModeQso.getItems().add("FM");
-        comboModeQso.getItems().add("USB");
-        comboModeQso.getItems().add("LSB");
-
-        // Récupération des coordonnées de la station
-        Settings settings = new Settings();
-        fldIndicatifStation.setText(settings.getIndicatifStation());
-        fldLocatorStation.setText(settings.getLocatorStation());
-        fldLocaliteStation.setText(settings.getLocaliteStation());
-
-        fldLatitudeDegres.setText(settings.getLatitudeDegresStation());
-        fldLatitudeMinutes.setText(settings.getLatitudeMinutesStation());
-        fldLatitudeSecondes.setText(settings.getLatitudeSecondesStation());
-        comboLatitude.getSelectionModel().select(settings.getLatitudeSituationStation());
-
-        fldLongitudeDegres.setText(settings.getLongitudeDegresStation());
-        fldLongitudeMinutes.setText(settings.getLongitudeMinutesStation());
-        fldLongitudeSecondes.setText(settings.getLongitudeSecondesStation());
-        comboLongitude.getSelectionModel().select(settings.getLongitudeSituationStation());
-
-        settings.closeInputSettings();
-
-        // Rafraichissement de la liste
-        refreshListeQso();
-
     }
 }

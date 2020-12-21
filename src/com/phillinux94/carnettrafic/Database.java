@@ -36,17 +36,17 @@ public class Database {
             this.stmt = this.conn.createStatement();
 
             String createTableQso = "CREATE TABLE IF NOT EXISTS QSO " +
-                                    "(ID INT PRIMARY KEY NOT NULL, " +
-                                    "QSO_DATE               DATE, " +
-                                    "QSO_INDICATIF          TEXT, " +
-                                    "QSO_DEPARTEMENT        TEXT, " +
-                                    "QSO_LOCATOR            TEXT, " +
-                                    "QSO_BANDE              TEXT, " +
-                                    "QSO_MODE               TEXT, " +
-                                    "QSO_QTH                TEXT, " +
-                                    "QSO_RST_R              TEXT, " +
-                                    "QSO_RST_E              TEXT, " +
-                                    "QSO_DISTANCE           INT)";
+                    "(ID INT PRIMARY KEY NOT NULL, " +
+                    "QSO_DATE               DATETIME DEFAULT CURRENT_DATE, " +
+                    "QSO_INDICATIF          TEXT, " +
+                    "QSO_DEPARTEMENT        TEXT, " +
+                    "QSO_LOCATOR            TEXT, " +
+                    "QSO_BANDE              TEXT, " +
+                    "QSO_MODE               TEXT, " +
+                    "QSO_QTH                TEXT, " +
+                    "QSO_RST_R              TEXT, " +
+                    "QSO_RST_E              TEXT, " +
+                    "QSO_DISTANCE           INT)";
 
             this.stmt.execute(createTableQso);
 
@@ -68,8 +68,8 @@ public class Database {
             Date locDateQso = Date.valueOf(dateQso);
 
             String insertSql =  "INSERT INTO QSO (ID, QSO_DATE, QSO_INDICATIF, QSO_DEPARTEMENT, QSO_LOCATOR, QSO_BANDE,  " +
-                                "QSO_MODE, QSO_QTH, QSO_RST_R, QSO_RST_E, QSO_DISTANCE) " +
-                                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    "QSO_MODE, QSO_QTH, QSO_RST_R, QSO_RST_E, QSO_DISTANCE) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             this.write = this.conn.prepareStatement(insertSql);
 
@@ -120,7 +120,7 @@ public class Database {
                 temp.add(rs.getString("QSO_QTH"));
                 temp.add(rs.getString("QSO_RST_R"));
                 temp.add(rs.getString("QSO_RST_E"));
-                temp.add(rs.getString("QSO_DISTANCE"));
+                temp.add(rs.getInt("QSO_DISTANCE"));
 
                 listeQso.add(temp);
 
@@ -173,6 +173,109 @@ public class Database {
         }
 
         return maxId;
+    }
+
+    public ArrayList getStatisticsByDate(){
+
+        ArrayList datas = new ArrayList();
+
+        try {
+
+            this.stmt = this.conn.createStatement();
+
+            String sqlStatDate =    "SELECT strftime('%Y-%m', QSO_DATE / 1000, 'unixepoch') AS ANNEE_MOIS, COUNT(*) " +
+                    "FROM QSO " +
+                    "GROUP BY ANNEE_MOIS " +
+                    "ORDER BY ANNEE_MOIS";
+
+            ResultSet rs = this.stmt.executeQuery(sqlStatDate);
+
+            while (rs.next()){
+
+                ArrayList temp = new ArrayList();
+
+                temp.add(rs.getString(1));
+                temp.add(rs.getInt(2));
+
+                datas.add(temp);
+            }
+
+        }
+        catch (SQLException e){
+
+            System.out.println(e.getMessage());
+
+        }
+
+        return datas;
+    }
+
+    public ArrayList getStatisticsByDistance(){
+
+        ArrayList datas = new ArrayList();
+
+        try {
+
+            this.stmt = this.conn.createStatement();
+
+            String sqlStatDistance =    "SELECT CASE " +
+                    "WHEN QSO_DISTANCE < 50 THEN '1 - Moins de 50 kilomètres' " +
+                    "WHEN QSO_DISTANCE >= 50 AND QSO_DISTANCE < 300 THEN '2 - De 50 à 299 kilomètres' " +
+                    "WHEN QSO_DISTANCE >= 300 AND QSO_DISTANCE < 1000 THEN '3 - De 300 à 999 kilomètres' " +
+                    "WHEN QSO_DISTANCE >= 1000 AND QSO_DISTANCE < 5000 THEN '4 - De 1000 à 4999 kilomètres' " +
+                    "WHEN QSO_DISTANCE >= 5000 AND QSO_DISTANCE < 10000 THEN '5 - De 5000 à 9999 kilomètres' " +
+                    "WHEN QSO_DISTANCE >= 10000 THEN '6 - De 10000 kilomètres et plus' " +
+                    "END AS TRANCHE, " +
+                    "COUNT(*) " +
+                    "FROM QSO " +
+                    "GROUP BY TRANCHE";
+
+            ResultSet rs = this.stmt.executeQuery(sqlStatDistance);
+
+            while (rs.next()){
+
+                ArrayList temp = new ArrayList();
+
+                temp.add(rs.getString(1));
+                temp.add(rs.getInt(2));
+
+                datas.add(temp);
+            }
+
+        }
+        catch (SQLException e){
+
+            System.out.println(e.getMessage());
+
+        }
+
+        return datas;
+
+    }
+
+    public int getNbQso(){
+
+        int nbQso = 0;
+
+        try {
+
+            this.stmt = this.conn.createStatement();
+
+            String sqlNbQso = "SELECT COUNT(*) FROM QSO";
+
+            ResultSet rs = this.stmt.executeQuery(sqlNbQso);
+
+            nbQso = rs.getInt(1);
+
+        }
+        catch (SQLException e){
+
+            System.out.println(e.getMessage());
+
+        }
+
+
+        return nbQso;
     }
 
     public void closeDatabase(){

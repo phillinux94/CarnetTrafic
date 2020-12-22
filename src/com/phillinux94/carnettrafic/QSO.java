@@ -51,9 +51,9 @@ public class QSO {
     }
     public String getStringDate(){
 
-        String localDate =  this.date.getDayOfMonth() + "/" +
-                this.date.getMonthValue() + "/" +
-                this.date.getYear();
+        String localDate = this.date.getYear() + "-" +
+                this.date.getMonthValue() + "-" +
+                this.date.getDayOfMonth();
 
         return localDate;
 

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="CarnetTrafic.jnlp">
+  <information>
+    <title>Carnet de Trafic</title>
+    <vendor>Philippe Labbe</vendor>
+    <description>CarnetTrafic</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href="CarnetTrafic.jar" size="56976" download="eager" />
+    <jar href="lib/sqlite-jdbc-3.20.1.jar" size="6637455" download="eager" />
+  </resources>
+  <jfx:javafx-desc  width="1200" height="600" main-class="com.phillinux94.carnettrafic.Main"  name="CarnetTrafic" />
+  <update check="background"/>
+</jnlp>

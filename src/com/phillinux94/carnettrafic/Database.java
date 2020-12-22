@@ -1,5 +1,7 @@
 package com.phillinux94.carnettrafic;
 
+import com.sun.org.apache.bcel.internal.generic.LoadClass;
+
 import java.io.File;
 import java.sql.*;
 import java.time.LocalDate;
@@ -97,14 +99,18 @@ public class Database {
         }
     }
 
-    public ArrayList getListeQso(){
+    public ArrayList getListeQso(String debut, String fin){
 
         ArrayList listeQso = new ArrayList();
 
         try {
 
             this.stmt = this.conn.createStatement();
-            ResultSet rs = this.stmt.executeQuery("SELECT * FROM QSO");
+
+            String sqlListeQso =    "SELECT * FROM QSO " +
+                                    "WHERE strftime('%Y-%m', QSO_DATE / 1000, 'unixepoch') BETWEEN '" + debut +"' AND '" + fin + "' ";
+
+            ResultSet rs = this.stmt.executeQuery(sqlListeQso);
 
             while (rs.next()){
 
@@ -175,7 +181,37 @@ public class Database {
         return maxId;
     }
 
-    public ArrayList getStatisticsByDate(){
+    public ArrayList getListePeriodes(){
+
+        ArrayList datas = new ArrayList();
+
+        try {
+
+            this.stmt = this.conn.createStatement();
+
+            String sqlListePeriodes =   "SELECT DISTINCT(strftime('%Y-%m', QSO_DATE / 1000, 'unixepoch')) AS ANNEE_MOIS " +
+                    "FROM QSO " +
+                    "ORDER BY ANNEE_MOIS";
+
+            ResultSet rs = this.stmt.executeQuery(sqlListePeriodes);
+
+            while (rs.next()){
+
+                datas.add(rs.getString(1));
+
+            }
+        }
+        catch (SQLException e){
+
+            System.out.println(e.getMessage());
+
+        }
+
+        return datas;
+
+    }
+
+    public ArrayList getStatisticsByDate(String debut, String fin){
 
         ArrayList datas = new ArrayList();
 
@@ -185,6 +221,7 @@ public class Database {
 
             String sqlStatDate =    "SELECT strftime('%Y-%m', QSO_DATE / 1000, 'unixepoch') AS ANNEE_MOIS, COUNT(*) " +
                     "FROM QSO " +
+                    "WHERE ANNEE_MOIS BETWEEN '" + debut +"' AND '" + fin + "' " +
                     "GROUP BY ANNEE_MOIS " +
                     "ORDER BY ANNEE_MOIS";
 
@@ -210,7 +247,9 @@ public class Database {
         return datas;
     }
 
-    public ArrayList getStatisticsByDistance(){
+
+
+    public ArrayList getStatisticsByDistance(String debut, String fin){
 
         ArrayList datas = new ArrayList();
 
@@ -228,6 +267,7 @@ public class Database {
                     "END AS TRANCHE, " +
                     "COUNT(*) " +
                     "FROM QSO " +
+                    "WHERE strftime('%Y-%m', QSO_DATE / 1000, 'unixepoch') BETWEEN '" + debut +"' AND '" + fin + "' " +
                     "GROUP BY TRANCHE";
 
             ResultSet rs = this.stmt.executeQuery(sqlStatDistance);
@@ -253,7 +293,7 @@ public class Database {
 
     }
 
-    public int getNbQso(){
+    public int getNbQso(String debut, String fin){
 
         int nbQso = 0;
 
@@ -261,7 +301,8 @@ public class Database {
 
             this.stmt = this.conn.createStatement();
 
-            String sqlNbQso = "SELECT COUNT(*) FROM QSO";
+            String sqlNbQso =   "SELECT COUNT(*) FROM QSO " +
+                    "WHERE strftime('%Y-%m', QSO_DATE / 1000, 'unixepoch') BETWEEN '" + debut +"' AND '" + fin + "' ";
 
             ResultSet rs = this.stmt.executeQuery(sqlNbQso);
 
@@ -279,6 +320,8 @@ public class Database {
     }
 
     public void closeDatabase(){
+
+        System.out.println("Fermeture connexion base de données");
 
         if (this.write != null){
             try {

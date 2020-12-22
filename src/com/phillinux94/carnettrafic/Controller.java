@@ -11,8 +11,10 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 
 import java.net.URL;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -21,13 +23,13 @@ import java.util.ResourceBundle;
 public class Controller implements Initializable {
 
     @FXML
-    private Pane selBtnCarnetTrafic;
+    private Button btnCarnetTrafic;
 
     @FXML
-    private Pane selBtnCalculLocator;
+    private Button btnCalculCoordonnees;
 
     @FXML
-    private Pane selBtnStatistiques;
+    private Button btnStatistiques;
 
     @FXML
     private Pane paneStation;
@@ -148,6 +150,12 @@ public class Controller implements Initializable {
     @FXML
     private TableColumn<QSO, String> tableDistance;
 
+    @FXML
+    private ChoiceBox comboListeDebut;
+
+    @FXML
+    private ChoiceBox comboListeFin;
+
     // Calcul des locator
     @FXML
     private TextField fldCalLatitudeDegres;
@@ -195,14 +203,20 @@ public class Controller implements Initializable {
     @FXML
     private LineChart<String, Number> chart2;
 
+    @FXML
+    private ChoiceBox comboStatDebut;
+
+    @FXML
+    private ChoiceBox comboStatFin;
+
 
 
     @FXML
     private void setCarnetTrafic(){
 
-        selBtnCarnetTrafic.setVisible(true);
-        selBtnCalculLocator.setVisible(false);
-        selBtnStatistiques.setVisible(false);
+        btnCarnetTrafic.setOpacity(0.5);
+        btnCalculCoordonnees.setOpacity(0);
+        btnStatistiques.setOpacity(0);
 
         paneCarnetTrafic.setVisible(true);
         paneCalculLocator.setVisible(false);
@@ -215,9 +229,9 @@ public class Controller implements Initializable {
     @FXML
     private void setCalculLocator(){
 
-        selBtnCarnetTrafic.setVisible(false);
-        selBtnCalculLocator.setVisible(true);
-        selBtnStatistiques.setVisible(false);
+        btnCarnetTrafic.setOpacity(0);
+        btnCalculCoordonnees.setOpacity(0.5);
+        btnStatistiques.setOpacity(0);
 
         paneCarnetTrafic.setVisible(false);
         paneCalculLocator.setVisible(true);
@@ -230,9 +244,6 @@ public class Controller implements Initializable {
     @FXML
     private void setCalculDistance(){
 
-        selBtnCarnetTrafic.setVisible(false);
-        selBtnCalculLocator.setVisible(false);
-        selBtnStatistiques.setVisible(false);
 
         paneCarnetTrafic.setVisible(false);
         paneCalculLocator.setVisible(false);
@@ -245,9 +256,9 @@ public class Controller implements Initializable {
     @FXML
     private void setCalculStatistiques(){
 
-        selBtnCarnetTrafic.setVisible(false);
-        selBtnCalculLocator.setVisible(false);
-        selBtnStatistiques.setVisible(true);
+        btnCarnetTrafic.setOpacity(0);
+        btnCalculCoordonnees.setOpacity(0);
+        btnStatistiques.setOpacity(0.5);
 
         paneCarnetTrafic.setVisible(false);
         paneCalculLocator.setVisible(false);
@@ -392,10 +403,6 @@ public class Controller implements Initializable {
 
             }
 
-
-            System.out.println(coordonnees);
-
-
             int idQso = data.getMaxId() + 1;
             String distance = "0";
 
@@ -422,10 +429,40 @@ public class Controller implements Initializable {
 
         refreshListeQso();
         calStatistiques();
+        periodesStatistiques();
 
         paneStation.setVisible(true);
         paneAjoutQso.setVisible(false);
 
+    }
+
+    @FXML
+    private void copyright(){
+
+        Alert copyright = new Alert(Alert.AlertType.INFORMATION);
+        copyright.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+        copyright.setHeaderText("Licence");
+        String texte = "Logiciel libre développé sous Licence MIT. \n";
+        texte += "Copyright © Philippe Labbe - 12/2020 - phlabbe94@gmail.com \n \n";
+        texte += "Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files ";
+        texte += "(the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, ";
+        texte += "publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do ";
+        texte += "so, subject to the following conditions: \n \n";
+        texte += "The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. \n \n";
+        texte += "The Software is provided “as is”, without warranty of any kind, express or implied, including but not limited to the warranties of ";
+        texte += "merchantability, fitness for a particular purpose and noninfringement. In no event shall the authors or copyright holders X be ";
+        texte += "liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in ";
+        texte += "connection with the software or the use or other dealings in the Software. \n \n";
+        texte += "Except as contained in this notice, the name of the Philippe Labbe shall not be used in advertising or otherwise to promote ";
+        texte += "the sale, use or other dealings in this Software without prior written authorization from the Philippe Labbe.";
+
+        copyright.setContentText(texte);
+
+        ButtonType buttonOK = new ButtonType("OK");
+
+        copyright.getButtonTypes().setAll(buttonOK);
+
+        Optional<ButtonType> result = copyright.showAndWait();
     }
 
     @FXML
@@ -460,6 +497,7 @@ public class Controller implements Initializable {
                 // Rafraichissement de la liste
                 refreshListeQso();
                 calStatistiques();
+                periodesStatistiques();
 
             }
 
@@ -599,8 +637,6 @@ public class Controller implements Initializable {
 
             coordonnees = calculDistance.ConvertLocatorToCoordinates(fldLocatorDistant.getText());
 
-            System.out.println(coordonnees);
-
             latitudeDistDegres = Double.valueOf(coordonnees.get(0).toString());
             latitudeDistMinutes = Double.valueOf(coordonnees.get(1).toString());
             latitudeDistSecondes = Double.valueOf(coordonnees.get(2).toString());
@@ -639,6 +675,13 @@ public class Controller implements Initializable {
 
         chart1.setVisible(false);
         chart2.setVisible(true);
+
+    }
+
+    @FXML
+    private void filterListeQso(){
+
+        refreshListeQso();
 
     }
 
@@ -689,21 +732,66 @@ public class Controller implements Initializable {
         settings.closeInputSettings();
 
         // Rafraichissement de la liste
+        periodesStatistiques();
         refreshListeQso();
-
         calStatistiques();
+
+
+    }
+    private void periodesStatistiques(){
+
+        Database db = new Database();
+        ArrayList listePeriodes = db.getListePeriodes();
+
+        db.closeDatabase();
+
+        comboStatDebut.getItems().clear();
+        comboStatFin.getItems().clear();
+
+        comboListeDebut.getItems().clear();
+        comboListeFin.getItems().clear();
+
+        for (int x = 0; x < listePeriodes.size(); x++){
+
+            comboStatDebut.getItems().add(listePeriodes.get(x).toString());
+            comboStatFin.getItems().add(listePeriodes.get(x).toString());
+
+            comboListeDebut.getItems().add(listePeriodes.get(x).toString());
+            comboListeFin.getItems().add(listePeriodes.get(x).toString());
+
+        }
+
+        try {
+
+            comboStatDebut.getSelectionModel().select(0);
+            comboStatFin.getSelectionModel().select(listePeriodes.size() - 1);
+
+            comboListeDebut.getSelectionModel().select(0);
+            comboListeFin.getSelectionModel().select(listePeriodes.size() - 1);
+
+        }
+        catch (Exception e){
+
+            System.out.println(e.getMessage());
+
+        }
 
     }
 
+    @FXML
     private void calStatistiques(){
 
         // Tests statistiques
         Database db = new Database();
 
-        ArrayList statByTranche = db.getStatisticsByDistance();
-        int nbQso = db.getNbQso();
+        ArrayList statByTranche = db.getStatisticsByDistance(comboStatDebut.getSelectionModel().getSelectedItem().toString(),
+                comboStatFin.getSelectionModel().getSelectedItem().toString());
 
-        ArrayList statByDate = db.getStatisticsByDate();
+        int nbQso = db.getNbQso(comboStatDebut.getSelectionModel().getSelectedItem().toString(),
+                comboStatFin.getSelectionModel().getSelectedItem().toString());
+
+        ArrayList statByDate = db.getStatisticsByDate(comboStatDebut.getSelectionModel().getSelectedItem().toString(),
+                comboStatFin.getSelectionModel().getSelectedItem().toString());
 
         db.closeDatabase();
 
@@ -715,6 +803,7 @@ public class Controller implements Initializable {
 
         chart1.getData().clear();
 
+
         for (int i = 0; i < statByTranche.size(); i++){
 
             tranche = (ArrayList) statByTranche.get(i);
@@ -725,6 +814,7 @@ public class Controller implements Initializable {
             chart1.getData().add(slice);
 
         }
+        chart1.setAnimated(false);
         chart1.setLegendVisible(true);
         chart1.setLabelsVisible(false);
         chart1.setLegendSide(Side.LEFT);
@@ -736,8 +826,11 @@ public class Controller implements Initializable {
 
         chart2.getData().clear();
 
-        XYChart.Series<String, Number> series1 = new XYChart.Series<>();
+
+        final XYChart.Series<String, Number> series1 = new XYChart.Series<>();
         series1.setName("Evolution mensuelle du nb de QSO");
+        chart2.setAnimated(false);
+
 
         for (int i = 0; i < statByDate.size(); i++){
 
@@ -759,7 +852,8 @@ public class Controller implements Initializable {
             Database data = new Database();
             ArrayList locListeQso = new ArrayList();
 
-            locListeQso = data.getListeQso();
+            locListeQso = data.getListeQso(comboListeDebut.getSelectionModel().getSelectedItem().toString(),
+                    comboListeFin.getSelectionModel().getSelectedItem().toString());
             data.closeDatabase();
 
             ArrayList qso = new ArrayList();

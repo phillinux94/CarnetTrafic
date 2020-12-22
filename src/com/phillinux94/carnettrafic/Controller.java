@@ -427,9 +427,10 @@ public class Controller implements Initializable {
         }
         data.closeDatabase();
 
+        periodesStatistiques();
         refreshListeQso();
         calStatistiques();
-        periodesStatistiques();
+
 
         paneStation.setVisible(true);
         paneAjoutQso.setVisible(false);
@@ -495,9 +496,10 @@ public class Controller implements Initializable {
                 database.closeDatabase();
 
                 // Rafraichissement de la liste
+                periodesStatistiques();
                 refreshListeQso();
                 calStatistiques();
-                periodesStatistiques();
+
 
             }
 
@@ -507,6 +509,7 @@ public class Controller implements Initializable {
         catch (Exception e){
 
             System.out.println(e.getMessage());
+            refreshListeQso();
 
         }
     }
@@ -781,67 +784,77 @@ public class Controller implements Initializable {
     @FXML
     private void calStatistiques(){
 
-        // Tests statistiques
-        Database db = new Database();
+        try {
 
-        ArrayList statByTranche = db.getStatisticsByDistance(comboStatDebut.getSelectionModel().getSelectedItem().toString(),
-                comboStatFin.getSelectionModel().getSelectedItem().toString());
+            // Calcul statistiques
+            Database db = new Database();
 
-        int nbQso = db.getNbQso(comboStatDebut.getSelectionModel().getSelectedItem().toString(),
-                comboStatFin.getSelectionModel().getSelectedItem().toString());
+            ArrayList statByTranche = db.getStatisticsByDistance(comboStatDebut.getSelectionModel().getSelectedItem().toString(),
+                    comboStatFin.getSelectionModel().getSelectedItem().toString());
 
-        ArrayList statByDate = db.getStatisticsByDate(comboStatDebut.getSelectionModel().getSelectedItem().toString(),
-                comboStatFin.getSelectionModel().getSelectedItem().toString());
+            int nbQso = db.getNbQso(comboStatDebut.getSelectionModel().getSelectedItem().toString(),
+                    comboStatFin.getSelectionModel().getSelectedItem().toString());
 
-        db.closeDatabase();
+            ArrayList statByDate = db.getStatisticsByDate(comboStatDebut.getSelectionModel().getSelectedItem().toString(),
+                    comboStatFin.getSelectionModel().getSelectedItem().toString());
 
-        // Nombre total de QSO
-        fldStatNbQso.setText(String.valueOf(nbQso));
+            db.closeDatabase();
 
-        // Nombre de QSO par tranche de distance
-        ArrayList tranche = new ArrayList();
+            // Nombre total de QSO
+            fldStatNbQso.setText(String.valueOf(nbQso));
 
-        chart1.getData().clear();
+            // Nombre de QSO par tranche de distance
+            ArrayList tranche = new ArrayList();
+
+            chart1.getData().clear();
 
 
-        for (int i = 0; i < statByTranche.size(); i++){
+            for (int i = 0; i < statByTranche.size(); i++){
 
-            tranche = (ArrayList) statByTranche.get(i);
-            String libTranche = (String) tranche.get(0);
-            int nbQsoTranche = (int) tranche.get(1);
+                tranche = (ArrayList) statByTranche.get(i);
+                String libTranche = (String) tranche.get(0);
+                int nbQsoTranche = (int) tranche.get(1);
 
-            PieChart.Data slice = new PieChart.Data(libTranche, nbQsoTranche);
-            chart1.getData().add(slice);
+                PieChart.Data slice = new PieChart.Data(libTranche, nbQsoTranche);
+                chart1.getData().add(slice);
+
+            }
+            chart1.setAnimated(false);
+            chart1.setLegendVisible(true);
+            chart1.setLabelsVisible(false);
+            chart1.setLegendSide(Side.LEFT);
+            chart1.setTitle("Nb de QSO par tranche de distance");
+            chart1.setStartAngle(90);
+
+            // Evolution mensuelle du nombre de QSO
+            ArrayList date = new ArrayList();
+
+            chart2.getData().clear();
+
+
+            final XYChart.Series<String, Number> series1 = new XYChart.Series<>();
+            series1.setName("Evolution mensuelle du nb de QSO");
+            chart2.setAnimated(false);
+
+
+            for (int i = 0; i < statByDate.size(); i++){
+
+                date = (ArrayList) statByDate.get(i);
+                String libDate = (String) date.get(0);
+                int nbQsoDate = (int) date.get(1);
+
+                series1.getData().add(new XYChart.Data<>(libDate, nbQsoDate));
+
+            }
+            chart2.getData().add(series1);
 
         }
-        chart1.setAnimated(false);
-        chart1.setLegendVisible(true);
-        chart1.setLabelsVisible(false);
-        chart1.setLegendSide(Side.LEFT);
-        chart1.setTitle("Nb de QSO par tranche de distance");
-        chart1.setStartAngle(90);
+        catch (Exception e){
 
-        // Evolution mensuelle du nombre de QSO
-        ArrayList date = new ArrayList();
-
-        chart2.getData().clear();
-
-
-        final XYChart.Series<String, Number> series1 = new XYChart.Series<>();
-        series1.setName("Evolution mensuelle du nb de QSO");
-        chart2.setAnimated(false);
-
-
-        for (int i = 0; i < statByDate.size(); i++){
-
-            date = (ArrayList) statByDate.get(i);
-            String libDate = (String) date.get(0);
-            int nbQsoDate = (int) date.get(1);
-
-            series1.getData().add(new XYChart.Data<>(libDate, nbQsoDate));
+            System.out.println(e.getMessage());
 
         }
-        chart2.getData().add(series1);
+
 
     }
 

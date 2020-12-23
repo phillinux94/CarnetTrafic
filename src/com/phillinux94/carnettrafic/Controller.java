@@ -12,13 +12,17 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
 
 public class Controller implements Initializable {
 
@@ -235,18 +239,6 @@ public class Controller implements Initializable {
 
         paneCarnetTrafic.setVisible(false);
         paneCalculLocator.setVisible(true);
-        paneCalculStatistiques.setVisible(false);
-        paneStation.setVisible(true);
-        paneAjoutQso.setVisible(false);
-
-    }
-
-    @FXML
-    private void setCalculDistance(){
-
-
-        paneCarnetTrafic.setVisible(false);
-        paneCalculLocator.setVisible(false);
         paneCalculStatistiques.setVisible(false);
         paneStation.setVisible(true);
         paneAjoutQso.setVisible(false);
@@ -688,6 +680,33 @@ public class Controller implements Initializable {
 
     }
 
+    @FXML
+    private void printListeQso() throws IOException {
+
+        Stage stg = new Stage();
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.pdf");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        File file = fileChooser.showSaveDialog(stg);
+
+        if (file != null) {
+            String fileString = file.toString();
+
+            if (!fileString.substring(fileString.length() - 4).equals(".pdf")) {
+
+                fileString += ".pdf";
+
+            }
+
+            PrintPdfListe pdfListe = new PrintPdfListe(fileString,
+                    "14FDX980",
+                    comboListeDebut.getSelectionModel().getSelectedItem().toString(),
+                    comboListeFin.getSelectionModel().getSelectedItem().toString());
+        }
+    }
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -754,17 +773,19 @@ public class Controller implements Initializable {
         comboListeDebut.getItems().clear();
         comboListeFin.getItems().clear();
 
-        for (int x = 0; x < listePeriodes.size(); x++){
 
-            comboStatDebut.getItems().add(listePeriodes.get(x).toString());
-            comboStatFin.getItems().add(listePeriodes.get(x).toString());
-
-            comboListeDebut.getItems().add(listePeriodes.get(x).toString());
-            comboListeFin.getItems().add(listePeriodes.get(x).toString());
-
-        }
 
         try {
+
+            for (int x = 0; x < listePeriodes.size(); x++){
+
+                comboStatDebut.getItems().add(listePeriodes.get(x).toString());
+                comboStatFin.getItems().add(listePeriodes.get(x).toString());
+
+                comboListeDebut.getItems().add(listePeriodes.get(x).toString());
+                comboListeFin.getItems().add(listePeriodes.get(x).toString());
+
+            }
 
             comboStatDebut.getSelectionModel().select(0);
             comboStatFin.getSelectionModel().select(listePeriodes.size() - 1);
@@ -862,11 +883,28 @@ public class Controller implements Initializable {
 
         try {
 
+            listeCarnetTrafic.getItems().clear();
+            listeCarnetTrafic.setFixedCellSize(40);
+
             Database data = new Database();
             ArrayList locListeQso = new ArrayList();
 
-            locListeQso = data.getListeQso(comboListeDebut.getSelectionModel().getSelectedItem().toString(),
-                    comboListeFin.getSelectionModel().getSelectedItem().toString());
+            int maxID = data.getMaxId();
+
+            if (maxID == 0){
+
+                locListeQso = data.getListeQso(comboListeDebut.getSelectionModel().getSelectedItem().toString(),
+                        comboListeFin.getSelectionModel().getSelectedItem().toString(), 0);
+
+            }
+            else {
+
+                locListeQso = data.getListeQso(comboListeDebut.getSelectionModel().getSelectedItem().toString(),
+                        comboListeFin.getSelectionModel().getSelectedItem().toString(), 1);
+
+            }
+
+
             data.closeDatabase();
 
             ArrayList qso = new ArrayList();
@@ -894,7 +932,6 @@ public class Controller implements Initializable {
 
             }
 
-            listeCarnetTrafic.getItems().clear();
             listeCarnetTrafic.getItems().addAll(qsoDatas);
 
             // Insertion dans le tableau

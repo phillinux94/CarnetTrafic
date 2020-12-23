@@ -1,11 +1,9 @@
 package com.phillinux94.carnettrafic;
 
-import com.sun.org.apache.bcel.internal.generic.LoadClass;
 
 import java.io.File;
 import java.sql.*;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -99,7 +97,9 @@ public class Database {
         }
     }
 
-    public ArrayList getListeQso(String debut, String fin){
+
+
+    public ArrayList getListeQso(String debut, String fin, int type){
 
         ArrayList listeQso = new ArrayList();
 
@@ -107,8 +107,20 @@ public class Database {
 
             this.stmt = this.conn.createStatement();
 
-            String sqlListeQso =    "SELECT * FROM QSO " +
-                                    "WHERE strftime('%Y-%m', QSO_DATE / 1000, 'unixepoch') BETWEEN '" + debut +"' AND '" + fin + "' ";
+            String sqlListeQso = "";
+            if (type == 1){
+
+                sqlListeQso =    "SELECT * FROM QSO " +
+                        "WHERE strftime('%Y-%m', QSO_DATE / 1000, 'unixepoch') BETWEEN '" + debut +"' AND '" + fin + "' ";
+
+            }
+            else{
+
+                sqlListeQso =    "SELECT * FROM QSO ";
+
+            }
+
+
 
             ResultSet rs = this.stmt.executeQuery(sqlListeQso);
 
@@ -246,8 +258,6 @@ public class Database {
 
         return datas;
     }
-
-
 
     public ArrayList getStatisticsByDistance(String debut, String fin){
 
